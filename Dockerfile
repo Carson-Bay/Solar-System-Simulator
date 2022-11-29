@@ -19,15 +19,15 @@ RUN apt update &&\
 
 RUN apt install -y libglew-dev freeglut3-dev libglfw3-dev libglfw3 libglm-dev pkg-config
 
-ENV DISPLAY 172.18.48.1:0.0
+ENV DISPLAY 172.19.240.1:0.0
 
 # Build App
 RUN mkdir -p /home/root/SolarSystem
 WORKDIR /home/root/SolarSystem
 COPY . .
 RUN mkdir build
-WORKDIR build
+WORKDIR /home/root/SolarSystem/build
 RUN cmake .. && make
-WORKDIR ..
+WORKDIR /home/root/SolarSystem
 
 CMD ./build/SolarSystem
