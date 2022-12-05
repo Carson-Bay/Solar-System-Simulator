@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(SolarSystem)
-set(CMAKE_MODULE_PATH /home/root/SolarSystem/libs/cmake)
-
+set(CMAKE_MODULE_PATH ${CMAKE_HOME_DIRECTORY}/libs/cmake)
+#/home/ubuntu/SolarSystem
 # OpenGL
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
@@ -20,6 +20,10 @@ find_package(GLM REQUIRED)
 include_directories(${GLM_INCLUDE_DIRS})
 link_directories(${GLM_LIBRARY_DIRS})
 
+find_package(assimp REQUIRED)
+include_directories(${assimp_INCLUDE_DIRS})
+link_directories(${assimp_LIBRARY_DIRS})
+
 include_directories(.)
 
 include(CTest)
@@ -27,7 +31,9 @@ enable_testing()
 
 add_executable(SolarSystem main.cpp
     common/loadShader.cpp
-    common/loadShader.hpp)
+    common/loadShader.hpp
+    common/controls.cpp
+    common/controls.hpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

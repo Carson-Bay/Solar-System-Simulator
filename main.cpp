@@ -7,14 +7,19 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 #include <common/loadShader.hpp>
+#include <common/controls.hpp>
 
 using namespace glm;
 
 GLFWwindow* window;
 
-int WIDTH = 1024;
-int HEIGHT = 768;
+#define WIDTH 1024
+#define HEIGHT 768
 
 int main(int, char**) {
     // Initialize GLFW
@@ -46,24 +51,13 @@ int main(int, char**) {
         return -1;
     }
 
+
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
 
-    // Projections matrix: 45 deg, 4:3 ratio, 
-    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
-
-    // Camera matrix
-    glm::mat4 View = glm::lookAt(
-        glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-        glm::vec3(0,0,0), // and looks at the origin
-        glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
-
     // Model matrix : an identity matrix (model will be at the origin)
     glm::mat4 Model = glm::mat4(1.0f);
-    // Model View Projection
-    glm::mat4 mvp = Projection * View * Model; 
 
     static const GLfloat g_vertex_buffer_data[] = {
         -1.0f,-1.0f,-1.0f, // triangle 1 : begin
@@ -167,6 +161,8 @@ int main(int, char**) {
     glfwSetInputMode(window, GLFW_STICKY_KEYS,GL_TRUE);
     // Background
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    // Backface culling
+    glEnable(GL_CULL_FACE);
 
     do {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -196,6 +192,13 @@ int main(int, char**) {
             (void*)0                          // array buffer offset
         );
 
+        // Caluculate MVP
+        computeMatricesFromInputs(window);
+        glm::mat4 Projection = getProjectionMatrix();
+        glm::mat4 View = getViewMatrix();
+
+        glm::mat4 mvp = Projection * View * Model; 
+
         // Draw the triangle !
         glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
         glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
@@ -209,6 +212,7 @@ int main(int, char**) {
 
     // Cleanup VBO
 	glDeleteBuffers(1, &vertexbuffer);
+    glDeleteBuffers(1, &colorbuffer);
 	glDeleteVertexArrays(1, &VertexArrayID);
 	glDeleteProgram(programID);
 
