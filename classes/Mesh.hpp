@@ -4,7 +4,12 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-#include <vector.h>
+#include <vector>
+#include <string>
+
+#include "Shader.hpp"
+
+using namespace std;
 
 struct Vertex {
     glm::vec3 Position;
@@ -15,6 +20,7 @@ struct Vertex {
 struct Texture {
     unsigned int id;
     string type;
+    string path;
 };
 
 class Mesh {
