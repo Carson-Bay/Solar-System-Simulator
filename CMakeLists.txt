@@ -20,10 +20,6 @@ find_package(GLM REQUIRED)
 include_directories(${GLM_INCLUDE_DIRS})
 link_directories(${GLM_LIBRARY_DIRS})
 
-find_package(assimp REQUIRED)
-include_directories(${assimp_INCLUDE_DIRS})
-link_directories(${assimp_LIBRARY_DIRS})
-
 include_directories(.)
 
 include(CTest)
@@ -33,7 +29,20 @@ add_executable(SolarSystem main.cpp
     common/loadShader.cpp
     common/loadShader.hpp
     common/controls.cpp
-    common/controls.hpp)
+    common/controls.hpp
+    common/loadTexture.cpp
+    common/loadTexture.hpp
+    classes/Shader.hpp
+    classes/Model.cpp
+    classes/Model.hpp
+    classes/Mesh.cpp
+    classes/Mesh.hpp
+    libs/stb_image.h
+    libs/stb_image.cpp
+    )
+
+    
+target_link_libraries(SolarSystem /usr/local/lib/libassimp.so)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
