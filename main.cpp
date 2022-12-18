@@ -17,6 +17,7 @@
 #include <classes/Model.hpp>
 #include <classes/Shader.hpp>
 #include <classes/Mesh.hpp>
+#include "libs/stb_image.h"
 
 using namespace glm;
 
@@ -55,18 +56,19 @@ int main(int, char**) {
         return -1;
     }
 
+    stbi_set_flip_vertically_on_load(true);
     // Model matrix : an identity matrix (model will be at the origin)
     glm::mat4 ModelMat = glm::mat4(1.0f);
 
-    Model cube("assets/suzanne.obj");
+    Model suzanne("assets/suzanne.obj");
     Shader shader( "shaders/VertexShader.glsl", "shaders/FragmentShader.glsl" );
 
     GLuint TextureID = loadDDS("assets/uvmap.DDS");
+    shader.use();
+    shader.setVec3("lightPos", 10.0f,10.0f,10.0f);
 
-    shader.setVec3("LightPosition_worldspace", glm::vec3(5.0f,5.0f,5.0f));
-
-    shader.setVec3("LightColor", glm::vec3(1.0f,1.0f,1.0f));
-    shader.setFloat("LightPower", 70.0f);
+    shader.setVec3("lightColor", 1.0f,1.0f,1.0f);
+    shader.setFloat("LightPower", 100);
     shader.setInt("texture1", 0);
 
     // ----- Options ----- 
@@ -80,7 +82,6 @@ int main(int, char**) {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     // Backface culling
     glEnable(GL_CULL_FACE);
-
     do {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.use();
@@ -89,17 +90,20 @@ int main(int, char**) {
         computeMatricesFromInputs(window);
         glm::mat4 Projection = getProjectionMatrix();
         glm::mat4 View = getViewMatrix();
+        shader.setVec3("viewPos", getCameraPosition());
 
         glm::mat4 mvp = Projection * View * ModelMat; 
 
-        shader.setMat("V", View);
-        shader.setMat("M", ModelMat);
-        shader.setMat("MVP", mvp);
+        shader.setMat("projection", Projection);
+        shader.setMat("view", View);
+        shader.setMat("model", ModelMat);
+
+        //shader.setMat("MVP", mvp);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, TextureID);
 
-        cube.Draw(shader);
+        suzanne.Draw(shader);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
