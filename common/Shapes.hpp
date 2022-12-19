@@ -11,6 +11,10 @@
 #include "../classes/Mesh.hpp"
 
 Mesh octahedron();
+Mesh pretty_octahedron();
+
+Mesh icosahedron();
+Mesh pretty_icosahedron();
 
 vector<Mesh> subdivideTriangles(Mesh mesh, uint32_t resolution);
 #endif
