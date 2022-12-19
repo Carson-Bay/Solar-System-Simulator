@@ -18,6 +18,14 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
     setupMesh();
 }
 
+Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices)
+{
+    this->vertices = vertices;
+    this->indices = indices;
+
+    setupMesh();
+}
+
 void Mesh::setupMesh() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -40,7 +48,13 @@ void Mesh::setupMesh() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
     // vertex texture coords
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoordx));
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoordy));
+
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoordz));
 
     glBindVertexArray(0);
 }
@@ -69,3 +83,30 @@ void Mesh::Draw(Shader &shader) {
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }  
+
+void Mesh::mapToSphere() {
+    for(int i=0; i<vertices.size(); i++){
+        glm::vec3 normalized = glm::normalize(vertices[i].Position);
+        vertices[i].Position = normalized;
+    }
+    setupMesh();
+}
+
+void Mesh::genSphereUVs(){
+    for(int j =0; j<vertices.size(); j++){
+        Vertex vertex = vertices[j];
+
+        float u = 0.5f + asin(vertex.Position.x)/M_PI;
+        float v = 0.5f + asin(vertex.Position.y)/M_PI; 
+        vertices[j].TexCoordz = glm::vec2(u,v);
+
+        u = 0.5f + asin(vertex.Position.z)/M_PI;
+        v = 0.5f + asin(vertex.Position.y)/M_PI; 
+        vertices[j].TexCoordx = glm::vec2(u,v);
+
+        u = 0.5f + asin(vertex.Position.z)/M_PI;
+        v = 0.5f + asin(vertex.Position.x)/M_PI; 
+        vertices[j].TexCoordy = glm::vec2(u,v);
+    }
+    setupMesh();
+}

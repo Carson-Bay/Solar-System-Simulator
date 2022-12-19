@@ -1,7 +1,6 @@
 # Build stuff 
 /build/
 .vscode
-assets/
 
 # Prerequisites
 *.d

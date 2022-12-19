@@ -17,6 +17,7 @@
 #include <classes/Model.hpp>
 #include <classes/Shader.hpp>
 #include <classes/Mesh.hpp>
+#include <classes/Sphere.hpp>
 #include "libs/stb_image.h"
 
 using namespace glm;
@@ -60,28 +61,34 @@ int main(int, char**) {
     // Model matrix : an identity matrix (model will be at the origin)
     glm::mat4 ModelMat = glm::mat4(1.0f);
 
-    Model suzanne("assets/suzanne.obj");
+    //Model suzanne("assets/suzanne.obj");
+    Sphere sphere = Sphere();
     Shader shader( "shaders/VertexShader.glsl", "shaders/FragmentShader.glsl" );
 
-    GLuint TextureID = loadDDS("assets/uvmap.DDS");
+    //GLuint TextureID = loadDDS("assets/uvmap.DDS");
+    GLuint TextureID = loadBMP_custom("assets/SeamlessTest.bmp");
+
     shader.use();
     shader.setVec3("lightPos", 10.0f,10.0f,10.0f);
 
     shader.setVec3("lightColor", 1.0f,1.0f,1.0f);
     shader.setFloat("LightPower", 100);
-    shader.setInt("texture1", 0);
+    //shader.setInt("texture1", 0);
 
     // ----- Options ----- 
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
-    // 
+    // Input
     glfwSetInputMode(window, GLFW_STICKY_KEYS,GL_TRUE);
     // Background
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     // Backface culling
     glEnable(GL_CULL_FACE);
+    // Wireframe
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     do {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.use();
@@ -103,7 +110,8 @@ int main(int, char**) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, TextureID);
 
-        suzanne.Draw(shader);
+        //suzanne.Draw(shader);
+        sphere.Draw(shader);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

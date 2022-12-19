@@ -27,14 +27,18 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 class Model 
 {
     public:
+        Model(){}
         Model(char *path)
         {
             loadModel(path);
         }
         void Draw(Shader &shader);	
+
+    protected:
+        vector<Mesh> meshes;
+
     private:
         // model data
-        vector<Mesh> meshes;
         string directory;
         vector<Texture> textures_loaded; 
 

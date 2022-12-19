@@ -32,11 +32,15 @@ add_executable(SolarSystem main.cpp
     common/controls.hpp
     common/loadTexture.cpp
     common/loadTexture.hpp
+    common/Shapes.cpp
+    common/Shapes.hpp
     classes/Shader.hpp
     classes/Model.cpp
     classes/Model.hpp
     classes/Mesh.cpp
     classes/Mesh.hpp
+    classes/Sphere.cpp
+    classes/Sphere.hpp
     libs/stb_image.h
     libs/stb_image.cpp
     )
