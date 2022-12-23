@@ -14,7 +14,7 @@
 
 Sphere::Sphere(){
     Mesh oct = octahedron();
-    meshes = subdivideTriangles(oct, 40);
+    meshes = subdivideTriangles(oct, 20);
     for(int i =0; i<meshes.size(); i++){
         meshes[i].mapToSphere();
         meshes[i].genSphereUVs();
