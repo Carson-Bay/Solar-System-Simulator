@@ -41,6 +41,10 @@ add_executable(SolarSystem main.cpp
     classes/Mesh.hpp
     classes/Sphere.cpp
     classes/Sphere.hpp
+    classes/GravitationalBody.cpp
+    classes/GravitationalBody.hpp
+    classes/SolarSystem.cpp
+    classes/SolarSystem.hpp
     libs/stb_image.h
     libs/stb_image.cpp
     )

@@ -18,6 +18,8 @@
 #include <classes/Shader.hpp>
 #include <classes/Mesh.hpp>
 #include <classes/Sphere.hpp>
+#include <classes/GravitationalBody.hpp>
+#include <classes/SolarSystem.hpp>
 #include "libs/stb_image.h"
 
 using namespace glm;
@@ -56,13 +58,17 @@ int main(int, char**) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         return -1;
     }
-
     stbi_set_flip_vertically_on_load(true);
-    // Model matrix : an identity matrix (model will be at the origin)
-    glm::mat4 ModelMat = glm::mat4(1.0f);
 
-    //Model suzanne("assets/suzanne.obj");
-    Sphere sphere = Sphere();
+    SolarSystem system;
+
+    GravitationalBody body1(100.0, glm::vec3(0.0, 0.0, 0.0),glm::vec3(0.0, 0.0, 0.0));
+    GravitationalBody body2(5.0, glm::vec3(5.0, 0.0, 0.0),glm::vec3(0.0, 2.0, 0.0));
+
+    system.objects.push_back(body1);
+    system.objects.push_back(body2);
+
+
     Shader shader( "shaders/VertexShader.glsl", "shaders/FragmentShader.glsl" );
 
     //GLuint TextureID = loadDDS("assets/uvmap.DDS");
@@ -88,7 +94,6 @@ int main(int, char**) {
     glEnable(GL_CULL_FACE);
     // Wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
     do {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.use();
@@ -99,19 +104,17 @@ int main(int, char**) {
         glm::mat4 View = getViewMatrix();
         shader.setVec3("viewPos", getCameraPosition());
 
-        glm::mat4 mvp = Projection * View * ModelMat; 
-
         shader.setMat("projection", Projection);
         shader.setMat("view", View);
-        shader.setMat("model", ModelMat);
 
-        //shader.setMat("MVP", mvp);
+        system.updateObjects();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, TextureID);
-
-        //suzanne.Draw(shader);
-        sphere.Draw(shader);
+        
+        for(int i=0; i<system.objects.size();i++){
+            system.objects[i].DrawObject(shader);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
