@@ -13,10 +13,11 @@ class GravitationalBody : public Sphere
 {
     public:
         GravitationalBody(float Mass, glm::vec3 initPosition, glm::vec3 initVelocity);
-        void updatePosition(float deltaTime);
+        void updatePosition();
 
         float Mass;
         glm::vec3 Position, Velocity, Acceleration;
+        glm::vec3 nextPosition, nextVelocity, nextAcceleration;
         glm::mat4 ModelMat;
 
         void DrawObject(Shader &shader); //! This is a placeholder, will work out better way once planet and moon classes are sorted

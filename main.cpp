@@ -62,8 +62,8 @@ int main(int, char**) {
 
     SolarSystem system;
 
-    GravitationalBody body1(100.0, glm::vec3(0.0, 0.0, 0.0),glm::vec3(0.0, 0.0, 0.0));
-    GravitationalBody body2(5.0, glm::vec3(5.0, 0.0, 0.0),glm::vec3(0.0, 2.0, 0.0));
+    GravitationalBody body1(1000000.0f, glm::vec3(0.0, 0.0, 0.0),glm::vec3(0.0, 0.0, 0.0));
+    GravitationalBody body2(1.0f, glm::vec3(5.0, 0.0, 0.0),glm::vec3(0.0, 1.0, 0.0));
 
     system.objects.push_back(body1);
     system.objects.push_back(body2);
@@ -110,7 +110,7 @@ int main(int, char**) {
         system.updateObjects();
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, TextureID);
+        glBindTexture(GL_TEXTURE_2D, TextureID);        
         
         for(int i=0; i<system.objects.size();i++){
             system.objects[i].DrawObject(shader);

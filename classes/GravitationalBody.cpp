@@ -13,10 +13,11 @@ GravitationalBody::GravitationalBody(float mass, glm::vec3 initPosition, glm::ve
                         0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void GravitationalBody::updatePosition(float deltaTime){
+void GravitationalBody::updatePosition(){
 
-    Velocity += Acceleration * deltaTime;
-    Position += Velocity * deltaTime;
+    Position = nextPosition;
+    Velocity = nextVelocity;
+    Acceleration = nextAcceleration;
 
     // recreate model matrix
     ModelMat = glm::mat4(1.0f, 0.0f, 0.0f, Position.x,
@@ -26,6 +27,7 @@ void GravitationalBody::updatePosition(float deltaTime){
 }
 
 void GravitationalBody::DrawObject(Shader &shader){
+    shader.use();
     shader.setMat("model", ModelMat);
     Draw(shader);
 }
