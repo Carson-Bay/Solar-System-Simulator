@@ -63,11 +63,11 @@ int main(int, char**) {
     SolarSystem system;
 
     GravitationalBody body1(1000000.0f, glm::vec3(0.0, 0.0, 0.0),glm::vec3(0.0, 0.0, 0.0));
-    GravitationalBody body2(1.0f, glm::vec3(5.0, 0.0, 0.0),glm::vec3(0.0, 1.0, 0.0));
-
+    GravitationalBody body2(1000000.0f, glm::vec3(5.0, 0.0, 0.0),glm::vec3(0.0, 2.0, 0.0));
+    GravitationalBody body3(1000000.0f, glm::vec3(-5.0, 0.0, 0.0),glm::vec3(0.0, -1.5, 0.0));
     system.objects.push_back(body1);
     system.objects.push_back(body2);
-
+    system.objects.push_back(body3);
 
     Shader shader( "shaders/VertexShader.glsl", "shaders/FragmentShader.glsl" );
 
@@ -94,7 +94,19 @@ int main(int, char**) {
     glEnable(GL_CULL_FACE);
     // Wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    double lastTime = glfwGetTime();
+    int nbframes = 0;
+
     do {
+        // FPS Counter
+        double currentTime = glfwGetTime();
+        nbframes++;
+        if(currentTime - lastTime >= 1.0){
+          printf("%f ms/frame\n", 1000.0/double(nbframes));
+          nbframes = 0;
+          lastTime += 1.0;
+        }
+        
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.use();
 

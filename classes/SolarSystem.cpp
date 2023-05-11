@@ -1,6 +1,8 @@
 #include "SolarSystem.hpp"
 
-const float G = 6.67E-11; // !Placeholder, need to google actual value I may be a god and just remembered it
+const float G = 6.67E-6; //6.67E-11; I was a god and just remebered it 
+float maxDeltaTime = 1 / 60.0; 
+#define __min(a,b) (((a) < (b)) ? (a) : (b))
 
 using namespace glm;
 
@@ -10,8 +12,9 @@ void SolarSystem::updateObjects() {
 
 	// Compute time difference between current and last frame
 	double currentTime = glfwGetTime();
-	float deltaTime = float(currentTime - lastTime);
-    
+	float deltaTime = float(currentTime - lastTime);  
+  deltaTime = __min(deltaTime, maxDeltaTime);
+
     // Velocity Verlet
     // get next positions
     for(int index=0; index<objects.size(); index++) {
@@ -32,7 +35,7 @@ void SolarSystem::updateObjects() {
             if(j != index){
                 glm::vec3 radius = objects[j].nextPosition - objects[index].nextPosition;
                 float radiusSquared = (pow(radius.x, 2) + pow(radius.y, 2) + pow(radius.z, 2));
-                objects[index].nextAcceleration -= (G *objects[j].Mass/radiusSquared)*radius;
+                objects[index].nextAcceleration += (G *objects[j].Mass/radiusSquared)*radius;
             }
         }
         objects[index].nextVelocity = objects[index].Velocity + (objects[index].Acceleration + objects[index].nextAcceleration)*deltaTime*0.5f;
