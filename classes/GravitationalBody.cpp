@@ -14,7 +14,6 @@ GravitationalBody::GravitationalBody(float mass, glm::vec3 initPosition, glm::ve
 }
 
 void GravitationalBody::updatePosition(){
-
     Position = nextPosition;
     Velocity = nextVelocity;
     Acceleration = nextAcceleration;
