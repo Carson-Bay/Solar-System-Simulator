@@ -12,14 +12,14 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <common/controls.hpp>
-#include <common/loadTexture.hpp>
-#include <classes/Model.hpp>
-#include <classes/Shader.hpp>
-#include <classes/Mesh.hpp>
-#include <classes/Sphere.hpp>
-#include <classes/GravitationalBody.hpp>
-#include <classes/SolarSystem.hpp>
+#include "common/controls.hpp"
+#include "common/loadTexture.hpp"
+#include "classes/Model.hpp"
+#include "classes/Shader.hpp"
+#include "classes/Mesh.hpp"
+#include "classes/Sphere.hpp"
+#include "classes/GravitationalBody.hpp"
+#include "classes/SolarSystem.hpp"
 #include "libs/stb_image.h"
 
 using namespace glm;
@@ -28,6 +28,11 @@ GLFWwindow* window;
 
 #define WIDTH 1024
 #define HEIGHT 768
+
+extern "C" {
+  __attribute__((visibility("default"))) int AmdPowerXpressRequestHighPerformance = 1;
+}
+
 
 int main(int, char**) {
     // Initialize GLFW
@@ -63,11 +68,7 @@ int main(int, char**) {
     SolarSystem system;
 
     GravitationalBody body1(1000000.0f, glm::vec3(0.0, 0.0, 0.0),glm::vec3(0.0, 0.0, 0.0));
-    GravitationalBody body2(1000000.0f, glm::vec3(5.0, 0.0, 0.0),glm::vec3(0.0, 2.0, 0.0));
-    GravitationalBody body3(1000000.0f, glm::vec3(-5.0, 0.0, 0.0),glm::vec3(0.0, -1.5, 0.0));
     system.objects.push_back(body1);
-    system.objects.push_back(body2);
-    system.objects.push_back(body3);
 
     Shader shader( "shaders/VertexShader.glsl", "shaders/FragmentShader.glsl" );
 
@@ -110,7 +111,7 @@ int main(int, char**) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.use();
 
-        // Caluculate MVP
+        // Calculate MVP
         computeMatricesFromInputs(window);
         glm::mat4 Projection = getProjectionMatrix();
         glm::mat4 View = getViewMatrix();

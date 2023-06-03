@@ -20,7 +20,7 @@
 using namespace std;
 
 // position
-glm::vec3 position = glm::vec3( 0, 0, 50 );
+glm::vec3 position = glm::vec3( 0, 0, 20 );
 // horizontal angle : toward -Z
 float horizontalAngle = 3.14f;
 // vertical angle : 0, look at the horizon
